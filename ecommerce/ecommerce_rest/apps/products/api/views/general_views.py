@@ -6,13 +6,13 @@ from apps.products.api.serializers.general_serializers import (
 )
 
 
-class MeasureUnitListAPIVew(GeneralListAPIView):
+class MeasureUnitListAPIView(GeneralListAPIView):
     serializer_class = MeasureUnitSerializer
 
 
-class IndicatorListAPIVew(GeneralListAPIView):
+class IndicatorListAPIView(GeneralListAPIView):
     serializer_class = IndicatorSerializer
 
 
-class CategoryProductListAPIVew(GeneralListAPIView):
+class CategoryProductListAPIView(GeneralListAPIView):
     serializer_class = CategoryProductSerializer
