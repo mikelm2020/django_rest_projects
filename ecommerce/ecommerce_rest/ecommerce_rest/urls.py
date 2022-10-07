@@ -6,6 +6,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from apps.users.views import Login
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Documentación de API",
@@ -25,6 +27,7 @@ urlpatterns = [
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path("admin/", admin.site.urls),
+    path('', Login.as_view(), name='login'),
     path("user/", include("apps.users.api.urls")),
     path("products/", include("apps.products.api.routers")),
 ]
