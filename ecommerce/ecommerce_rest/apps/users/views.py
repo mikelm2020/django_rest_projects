@@ -11,6 +11,23 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from apps.users.api.serializers import UserTokenSerializer
 
 
+class UserToken(APIView):
+    def get(self, request, *args, **kwargs):
+        username = request.GET.get("username")
+        try:
+            user_token = Token.objects.get(
+                user=UserTokenSerializer()
+                .Meta.model.objects.filter(username=username)
+                .first()
+            )
+            return Response({"token": user_token.key})
+        except:
+            return Response(
+                {"error": "Credenciales enviadas incorrectas."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
 class Login(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         login_serializer = self.serializer_class(
@@ -31,11 +48,13 @@ class Login(ObtainAuthToken):
                         status=status.HTTP_201_CREATED,
                     )
                 else:
-                    all_sessions = Session.objects.filter(expire_date__gte = datetime.now())
+                    all_sessions = Session.objects.filter(
+                        expire_date__gte=datetime.now()
+                    )
                     if all_sessions.exists():
                         for session in all_sessions:
                             session_data = session.get_decoded()
-                            if user.id == int(session_data.get('_auth_user_id')):
+                            if user.id == int(session_data.get("_auth_user_id")):
                                 session.delete()
 
                     token.delete()
