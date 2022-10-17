@@ -6,6 +6,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from apps.users.views import Login, Logout, UserToken
 
 schema_view = get_schema_view(
@@ -22,14 +24,24 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
+    re_path(
+        r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
+    re_path(
+        r"^swagger/$",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    re_path(
+        r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
+    ),
     path("admin/", admin.site.urls),
-    path('', Login.as_view(), name='login'),
-    path('logout/', Logout.as_view(), name='logout'),
-    path('refresh-token/', UserToken.as_view(), name='refresh_token'),
+    path("", Login.as_view(), name="login"),
+    path("logout/", Logout.as_view(), name="logout"),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path("user/", include("apps.users.api.urls")),
     path("products/", include("apps.products.api.routers")),
 ]

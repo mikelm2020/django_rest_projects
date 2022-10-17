@@ -52,6 +52,7 @@ THIRD_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "simple_history",
     "drf_yasg",
 ]
@@ -60,11 +61,9 @@ INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
 
 SWAGGER_SETTINGS = {"DOC_EXPANSION": "none"}
 
-TOKEN_EXPIRED_AFTER_SECONDS = 80000
-
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'apps.users.authentication_mixins.Authentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ]
 }
 
@@ -140,7 +139,6 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
 ]
-
 
 
 # Static files (CSS, JavaScript, Images)
