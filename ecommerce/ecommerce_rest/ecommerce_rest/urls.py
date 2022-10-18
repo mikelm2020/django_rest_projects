@@ -8,7 +8,7 @@ from drf_yasg import openapi
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from apps.users.views import Login, Logout, UserToken
+from apps.users.views import Login, Logout
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -20,7 +20,7 @@ schema_view = get_schema_view(
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=[permissions.AllowAny],
+    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
@@ -40,8 +40,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", Login.as_view(), name="login"),
     path("logout/", Logout.as_view(), name="logout"),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("user/", include("apps.users.api.urls")),
     path("products/", include("apps.products.api.routers")),
 ]
