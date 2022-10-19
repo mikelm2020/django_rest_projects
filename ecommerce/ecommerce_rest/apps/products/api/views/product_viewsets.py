@@ -1,13 +1,14 @@
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.parsers import JSONParser, MultiPartParser
 
 from apps.products.api.serializers.product_serializers import ProductSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-
+    parser_classes = (JSONParser,MultiPartParser,)
 
     def get_queryset(self, pk=None):
         if pk is None:
@@ -18,7 +19,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         for key, value in request.__dict__.items():
-            print(key, '==', value)
+            print(key, "==", value)
         product_serializer = self.get_serializer(self.get_queryset(), many=True)
         return Response(product_serializer.data, status=status.HTTP_200_OK)
 
