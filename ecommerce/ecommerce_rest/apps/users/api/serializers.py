@@ -1,3 +1,4 @@
+from dataclasses import fields
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from apps.users.models import User
@@ -24,11 +25,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-    def update(self, instance, validated_data):
-        updated_user = super().update(instance, validated_data)
-        updated_user.set_password(validated_data["password"])
-        updated_user.save()
-        return updated_user
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "email", "name", "last_name")
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -39,7 +40,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
         return {
             "id": instance["id"],
+            "name": instance["name"],
             "username": instance["username"],
             "email": instance["email"],
-            "password": instance["password"],
         }
