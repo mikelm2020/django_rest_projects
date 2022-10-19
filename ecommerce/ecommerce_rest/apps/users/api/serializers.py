@@ -32,6 +32,20 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         fields = ("username", "email", "name", "last_name")
 
 
+class PasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=128, min_length=6, write_only=True)
+    password_confirm = serializers.CharField(
+        max_length=128, min_length=6, write_only=True
+    )
+
+    def validate(self, data):
+        if data["password"] != data["password_confirm"]:
+            raise serializers.ValidationError(
+                {"password": "Debe ingresar ambas contraseñas iguales"}
+            )
+        return data
+
+
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

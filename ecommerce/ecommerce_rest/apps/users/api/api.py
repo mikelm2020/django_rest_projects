@@ -2,12 +2,14 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework import viewsets
 from apps.users.models import User
 from apps.users.api.serializers import (
     UserSerializer,
     UserListSerializer,
     UpdateUserSerializer,
+    PasswordSerializer,
 )
 
 
@@ -26,6 +28,22 @@ class UserViewSet(viewsets.GenericViewSet):
                 .values("id", "username", "email", "name")
             )
         return self.queryset
+
+    @action(detail=True, methods=["post"])
+    def set_password(self, request, pk=None):
+        user = self.get_object(pk)
+        password_serializer = PasswordSerializer(data=request.data)
+        if password_serializer.is_valid():
+            user.set_password(password_serializer.validated_data["password"])
+            user.save()
+            return Response({"message": "Contraseña actualizada correctamente."})
+        return Response(
+            {
+                "message": "Hay errores en la información enviada.",
+                "errors": password_serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     def list(self, request):
         users = self.get_queryset()
