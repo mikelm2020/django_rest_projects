@@ -3,12 +3,16 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser, MultiPartParser
 
+from apps.base.utils import validate_files
 from apps.products.api.serializers.product_serializers import ProductSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-    parser_classes = (JSONParser,MultiPartParser,)
+    parser_classes = (
+        JSONParser,
+        MultiPartParser,
+    )
 
     def get_queryset(self, pk=None):
         if pk is None:
@@ -24,7 +28,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Response(product_serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        serializer = self.serializer_class(data=request.data)
+
+        data = validate_files(request.data, "image")
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -35,9 +41,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk=None):
         if self.get_queryset(pk):
-            product_serializer = self.serializer_class(
-                self.get_queryset(pk), data=request.data
-            )
+            data = validate_files(request.data, "image", True)
+            product_serializer = self.serializer_class(self.get_queryset(pk), data=data)
             if product_serializer.is_valid():
                 product_serializer.save()
                 return Response(product_serializer.data, status=status.HTTP_200_OK)
