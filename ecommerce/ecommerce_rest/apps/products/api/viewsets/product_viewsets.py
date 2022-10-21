@@ -22,10 +22,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request):
-        for key, value in request.__dict__.items():
-            print(key, "==", value)
         product_serializer = self.get_serializer(self.get_queryset(), many=True)
-        return Response(product_serializer.data, status=status.HTTP_200_OK)
+        data = {
+            "total": self.get_queryset().count(),
+            "totalNotFiltered": self.get_queryset().count(),
+            "rows": product_serializer.data
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
     def create(self, request):
 
