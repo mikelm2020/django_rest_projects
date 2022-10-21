@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 def validate_files(request, field, update=False):
     """
     Turn mutability in request
@@ -17,3 +20,10 @@ def validate_files(request, field, update=False):
             request.__setitem_(field, None)
 
     return request
+
+
+def format_date(date):
+    date = datetime.strptime(date, "%d/%m/%Y")
+    date = f"{date.year}-{date.month}-{date.day}"
+
+    return date
