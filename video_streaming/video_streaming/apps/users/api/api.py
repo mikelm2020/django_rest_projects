@@ -1,9 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from django.shortcuts import get_object_or_404
 
 from apps.users.api.serializers import (
+    PasswordSerializer,
     UserSerializer,
     UserListSerializer,
     UserUpdateSerializer,
@@ -38,7 +40,10 @@ class UserViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_201_CREATED,
             )
         return Response(
-            {"message": "Hay errores en el registro!", "errors": user_serializer.errors},
+            {
+                "message": "Hay errores en el registro!",
+                "errors": user_serializer.errors,
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -74,5 +79,21 @@ class UserViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_200_OK,
             )
         return Response(
-            {"message": "El usuario no existe!"}, status=status.HTTP_400_BAD_REQUEST
+            {"message": "El usuario no existe!"}, status=status.HTTP_404_NOT_FOUND
+        )
+
+    @action(methods=["post"], detail=True)
+    def set_password(self, request, pk=None):
+        user = self.get_object(pk)
+        password_serializer = PasswordSerializer(data=request.data)
+        if password_serializer.is_valid():
+            user.set_password(password_serializer.validated_data["password"])
+            user.save()
+            return Response(
+                {"message": "La contraseña se actualizó correctamente!"},
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {"message": "Ocurrieron errores!", "error": password_serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
         )
