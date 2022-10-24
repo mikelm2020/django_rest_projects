@@ -62,6 +62,7 @@ THIRD_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "simple_history",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
@@ -146,3 +147,5 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
+
+SWAGGER_SETTINGS = {"DOC_EXPANSION": "none"}
