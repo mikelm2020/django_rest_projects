@@ -1,34 +1,37 @@
-# from django.db import models
-# from apps.core.models import FilmGenre, Classification, Country, Provider
+from django.db import models
 
-# class Video(models.Model):
-#     """Model definition for the streaming's material."""
+from apps.core.models import FilmGenre, Classification, Country, Provider
+from apps.base.models import BaseModel
 
-#     VIDEO_TYPE_CHOICES = (
-#         ("S", "Serie"),
-#         ("M", "Pelicula"),
-#         ("D", "Documental"),
-#         ("R", "Reality"),
-#     )
 
-#     name = models.CharField("Nombre", max_length=200)
-#     num_year = models.IntegerField(verbose_name="Año")
-#     active = models.BooleanField(verbose_name="Activo", default=True)
-#     video_type = models.CharField("Tipo", max_length=1, choices=VIDEO_TYPE_CHOICES)
-#     film_genre = models.ManyToManyField(
-#         FilmGenre, verbose_name="Genero Cinematográfico"
-#     )
-#     classification = models.ForeignKey(
-#         Classification, on_delete=models.CASCADE, verbose_name="Clasificación"
-#     )
-#     country = models.ManyToManyField(Country, verbose_name="Pais")
-#     provider = models.ManyToManyField(Provider, verbose_name="Proveedor")
-#     duration = models.IntegerField(verbose_name="Duración", blank=True)
+class Video(BaseModel):
+    """Model definition for the streaming's material."""
 
-#     class Meta:
+    VIDEO_TYPE_CHOICES = (
+        ("S", "Serie"),
+        ("M", "Pelicula"),
+        ("D", "Documental"),
+        ("R", "Reality"),
+    )
 
-#         verbose_name = "Video"
-#         verbose_name_plural = "Videos"
+    name = models.CharField("Nombre", max_length=200)
+    num_year = models.IntegerField(verbose_name="Año")
+    active = models.BooleanField(verbose_name="Activo", default=True)
+    video_type = models.CharField("Tipo", max_length=1, choices=VIDEO_TYPE_CHOICES)
+    film_genre = models.ManyToManyField(
+        FilmGenre, verbose_name="Genero Cinematográfico"
+    )
+    classification = models.ForeignKey(
+        Classification, on_delete=models.CASCADE, verbose_name="Clasificación"
+    )
+    country = models.ManyToManyField(Country, verbose_name="Pais")
+    provider = models.ManyToManyField(Provider, verbose_name="Proveedor")
+    duration = models.IntegerField(verbose_name="Duración", blank=True)
 
-#     def __str__(self):
-#         return self.name
+    class Meta:
+
+        verbose_name = "Video"
+        verbose_name_plural = "Videos"
+
+    def __str__(self):
+        return self.name
