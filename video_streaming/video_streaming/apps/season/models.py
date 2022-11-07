@@ -18,3 +18,10 @@ class Season(BaseModel):
 
     def __str__(self):
         return f"temporada {self.number_season} - {self.video.name}"
+
+    def to_dict(self):
+        return {
+            "video": self.video,
+            "chapters": self.chapters,
+            "number_season": self.number_season,
+        }

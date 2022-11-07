@@ -16,7 +16,6 @@ class Video(BaseModel):
 
     name = models.CharField("Nombre", max_length=200)
     num_year = models.IntegerField(verbose_name="Año")
-    active = models.BooleanField(verbose_name="Activo", default=True)
     video_type = models.CharField("Tipo", max_length=1, choices=VIDEO_TYPE_CHOICES)
     film_genre = models.ManyToManyField(
         FilmGenre, verbose_name="Genero Cinematográfico"
@@ -35,3 +34,14 @@ class Video(BaseModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def number_of_seasons(self):
+        from django.db.models import Count
+        from apps.season.models import Season
+
+        seasons = Season.objects.filter(video=self, state=True).aggregate(
+            Count("video")
+        )
+
+        return seasons
