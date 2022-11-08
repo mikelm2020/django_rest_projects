@@ -35,13 +35,4 @@ class Video(BaseModel):
     def __str__(self):
         return self.name
 
-    @property
-    def number_of_seasons(self):
-        from django.db.models import Count
-        from apps.season.models import Season
-
-        seasons = Season.objects.filter(video=self, state=True).aggregate(
-            Count("video")
-        )
-
-        return seasons
+    
