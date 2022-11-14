@@ -28,6 +28,7 @@ class Video(BaseModel):
     duration = models.IntegerField(verbose_name="Duración", blank=True)
     chapters = models.SmallIntegerField(verbose_name="Capitulos", blank=True, null=True)
     number_season = models.SmallIntegerField(verbose_name="Temporada", blank=True, null=True)
+    viewed = models.BooleanField(verbose_name="Vista", default=False)
 
 
     class Meta:

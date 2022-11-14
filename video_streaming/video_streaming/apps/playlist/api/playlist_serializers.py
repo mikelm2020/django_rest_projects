@@ -10,10 +10,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("email", "name", "last_name")
 
 
-class VideoSerializer(serializers.ModelSerializer):
+class VideoSerializer(serializers.Serializer):
+    viewed = serializers.BooleanField()
     class Meta:
         model = Video
-        fields = ("name", "video_type", "duration")
+        fields = ("name", "video_type", "duration", "chapters", "number_season", "viewed")
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
