@@ -55,7 +55,6 @@ LOCAL_APPS = [
     "apps.base",
     "apps.core",
     "apps.playlist",
-    "apps.season",
     "apps.video",
 ]
 

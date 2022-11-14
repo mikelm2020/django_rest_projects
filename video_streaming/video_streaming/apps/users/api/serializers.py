@@ -26,6 +26,13 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
             return user
 
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError(
+                "La contraseña debe tener al menos 8 caracteres"
+            )
+        return value
+
 
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,6 +60,10 @@ class PasswordSerializer(serializers.Serializer):
     )
 
     def validate(self, data):
+        if len(data["password"]) < 8 or len(data["password_confirm"]) < 8:
+            raise serializers.ValidationError(
+                {"La contraseña debe tener por lo menos 8 caracteres."}
+            )
         if data["password"] != data["password_confirm"]:
             raise serializers.ValidationError(
                 {"password_confirm": "Ambas contraseñas deben ser iguales"}

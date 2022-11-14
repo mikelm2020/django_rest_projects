@@ -26,6 +26,9 @@ class Video(BaseModel):
     country = models.ManyToManyField(Country, verbose_name="Pais")
     provider = models.ManyToManyField(Provider, verbose_name="Proveedor")
     duration = models.IntegerField(verbose_name="Duración", blank=True)
+    chapters = models.SmallIntegerField(verbose_name="Capitulos", blank=True, null=True)
+    number_season = models.SmallIntegerField(verbose_name="Temporada", blank=True, null=True)
+
 
     class Meta:
 

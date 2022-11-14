@@ -1,17 +1,18 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from django.shortcuts import get_object_or_404
 
 from apps.video.models import Video
 from apps.video.api.video_serializers import (
     VideoSerializer,
-    SeasonRegisterSerializer,
     FilmGenreSerializer,
     ClassificationSerializer,
     CountrySerializer,
     ProviderSerializer,
+    SeasonSerializer,
 )
 from apps.core.models import *
 
@@ -37,10 +38,7 @@ class VideoViewSet(viewsets.GenericViewSet):
         if serializer.is_valid():
             serializer.save()
             if serializer.data["video_type"] == "S":
-                data_season = {"video": serializer.data["id"]}
-                data_season = SeasonRegisterSerializer(data=data_season)
-                if data_season.is_valid():
-                    data_season.save()
+                pass
 
             return Response(
                 {"message": "Video registrado correctamente"},
@@ -84,6 +82,26 @@ class VideoViewSet(viewsets.GenericViewSet):
         return Response(
             {"message": "No existe el video que desea eliminar"},
             status=status.HTTP_404_NOT_FOUND,
+        )
+
+    def partial_update(self, request, pk=None):
+        """Update with data of the serie's season"""
+        video = self.get_object(pk)
+        video_serializer = SeasonSerializer(video, data=request.data, partial=True)
+        if video_serializer.is_valid():
+            video_serializer.save()
+            return Response(
+                {
+                    "message": "Video actualizado correctamente con los datos de la temporada"
+                },
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {
+                "message": "Hay errores en la actualización",
+                "error": video_serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     @action(methods=["get"], detail=False)
