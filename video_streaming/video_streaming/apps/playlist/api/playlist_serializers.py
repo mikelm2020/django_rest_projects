@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("email", "name", "last_name")
 
 
-class VideoSerializer(serializers.Serializer):
+class VideoSerializer(serializers.ModelSerializer):
     viewed = serializers.BooleanField()
     class Meta:
         model = Video

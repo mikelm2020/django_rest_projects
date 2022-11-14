@@ -16,31 +16,24 @@ class VideoSerializer(serializers.ModelSerializer):
             "deleted_date",
         )
 
-        def validate_duration(self, value):
-            if value == 0:
+    def validate(self, data):
+        if data["video_type"] == "M":
+            if data["duration"] == 0:
                 raise serializers.ValidationError(
-                    "La duración de una pélicula no puede ser 0"
+                    {"duration": "La duración de una pélicula no puede ser 0"}
                 )
-            return value
-
-        def validate(self, data):
-            if data["video_type"] == "M":
-                if data["duration"] == 0:
-                    raise serializers.ValidationError(
-                        {"duration": "La duración de una pélicula no puede ser 0"}
-                    )
-            elif data["video_type"] == "S":
-                if data["chapters"] == 0:
-                    raise serializers.ValidationError(
-                        {
-                            "chapters": "Falta registrar el número de capitulos de la temporada"
-                        }
-                    )
-                if data["number_season"] == 0:
-                    raise serializers.ValidationError(
-                        {"number_season": "Falta registrar el número de temporada"}
-                    )
-            return data
+        elif data["video_type"] == "S":
+            if data["chapters"] == 0:
+                raise serializers.ValidationError(
+                    {
+                        "chapters": "Falta registrar el número de capitulos de la temporada"
+                    }
+                )
+            if data["number_season"] == 0:
+                raise serializers.ValidationError(
+                    {"number_season": "Falta registrar el número de temporada"}
+                )
+        return data
 
 
 class FilmGenreSerializer(serializers.ModelSerializer):

@@ -10,7 +10,6 @@ class Playlist(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
     video = models.ManyToManyField(Video)
-    viewed = models.BooleanField(verbose_name="Visto", default=False)
 
     class Meta:
         verbose_name = "Lista de reproducción"
